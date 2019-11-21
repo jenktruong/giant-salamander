@@ -1,0 +1,44 @@
+---
+title: "Pacific Giant Salamander"
+author: "Jennifer Truong & Joanne Pham"
+date: "11/21/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,
+                      message = FALSE,
+                      warning = FALSE)
+```
+
+```{r}
+# Attach packages
+
+library(tidyverse)
+library(janitor)
+
+# Read in Mack Creek Vertebrates.csv
+
+mack_creek_df <- read_csv("mack_creek_vertebrates.csv") %>% 
+  clean_names() # Change column names to lower case
+```
+
+## Introduction
+
+## Data and Methods
+
+## Results
+
+### A. Annual Salamander Counts in Old Growth (OG) and Clear Cut (CC) Sections of Mack Creek
+
+### B. Salamander Counts by Channel Classification
+
+### C. Hypothesis Testing: Significant Difference in Location?
+
+### D. Comparison of Salamander Weights in OG and CC Sections
+
+### E. Comparison of Salamander Weights in Pools, Cascades, and Side Channels
+
+## Summary
+
+## References
