@@ -84,6 +84,32 @@ ggplot(data = mack_creek_cc_og, aes(x = year, y = counts)) +
 mack_creek_weight_2017 <- mack_creek_data %>% 
   filter(year == 2017)
 
+# Determining the counts of salamanders in different channel types in different forest sections for 2017
+
+mack_creek_class_count <- mack_creek_weight_2017 %>% 
+  filter(channeltype %in% c("C", "P", "SC")) %>% 
+  count(channeltype, section)
+
+mack_creek_class_table <- mack_creek_class_count %>% 
+  pivot_wider(names_from = section, values_from = n)
+
+```
+
+```{r}
+# Now finding the proportions
+mc_props <- mack_creek_class_table %>% 
+  janitor::adorn_percentages(denominator = "row") %>% 
+  adorn_pct_formatting(digits = 0) %>% 
+  adorn_ns(position = "front")
+
+mc_props <- mc_props %>% 
+  rename("Channel type" = channeltype,
+         "Clear cut" = CC,
+         "Original growth" = OG)
+```
+
+
+
 
 ```
 
@@ -99,6 +125,14 @@ The salamanders of the OG and CC sections are unpaired, so we will do an unpaire
 mack_creek_weight_section <- mack_creek_weight_2017 %>% 
   select(-channeltype) # Remove channel column
 
+<<<<<<< HEAD
+# Create ridgeline plots and qq plots to see data distribution
+
+# Ridgeline plots
+ggplot(data = mack_creek_weight_section,
+       aes(x = section, y = weight)) +
+  geom_beeswarm(aes(color = section))
+=======
 # Find mean weight for the two sections
 mc_weight_section_summary <- mack_creek_weight_section %>% 
   group_by(section) %>%  # Group by section
@@ -133,6 +167,7 @@ ggplot() + # Leave ggplot blank to graph from multiple data frames
                 color = "red") + # Color them with same color as mean point
   theme_minimal()
   
+>>>>>>> d9e180c5a76c0532a58fc3593bc53e8f69c75c13
 ```
 
 
