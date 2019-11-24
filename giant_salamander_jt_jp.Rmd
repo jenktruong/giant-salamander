@@ -8,7 +8,8 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE,
                       message = FALSE,
-                      warning = FALSE)
+                      warning = FALSE,
+                      results = 'hide')
 ```
 
 ```{r}
@@ -16,6 +17,10 @@ knitr::opts_chunk$set(echo = FALSE,
 
 library(tidyverse)
 library(janitor)
+library(here)
+library(kableExtra)
+library(ggbeeswarm)
+library(car)
 
 # Read in Mack Creek Vertebrates.csv
 
@@ -30,6 +35,12 @@ mack_creek_df <- read_csv("mack_creek_vertebrates.csv") %>%
 "Old Growth" refers to the 500 year old coniferous forest upstream, while "Clear Cut" refers to the clear-cut section of the forest.
 
 ## Results
+
+```{r}
+# Data frame to pull for all results. 
+mack_creek_data <- mack_creek_df %>% 
+  select(entity, section, weight)
+```
 
 ### A. Annual Salamander Counts in Old Growth (OG) and Clear Cut (CC) Sections of Mack Creek
 
