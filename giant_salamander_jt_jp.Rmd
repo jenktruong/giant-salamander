@@ -39,14 +39,33 @@ mack_creek_df <- read_csv("mack_creek_vertebrates.csv") %>%
 ```{r}
 # Data frame to pull for all results. 
 mack_creek_data <- mack_creek_df %>% 
+<<<<<<< HEAD
   select(entity, section, weight)
 
 # Note: Weights is in grams (from metadata)
+=======
+  select(entity, section, weight, year)
+>>>>>>> bd7799770dc93d59e94041fead3f724fd7137576
 ```
 
 ### A. Annual Salamander Counts in Old Growth (OG) and Clear Cut (CC) Sections of Mack Creek
 
-hello
+```{r}
+# Counting for section (clear and old growth)
+
+mack_creek_cc_og <- mack_creek_data %>% 
+  count(section, year)
+
+mack_creek_cc_og
+```
+
+```{r}
+# Graph for changes in yearly salamander population in these two sections over time 
+
+ggplot(data = mack_creek_cc_og, aes(x = year)) +
+  geom_histogram(aes(fill = n))
+```
+
 
 ### B. Salamander Counts by Channel Classification
 
