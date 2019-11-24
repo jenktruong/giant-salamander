@@ -25,7 +25,8 @@ library(car)
 # Read in Mack Creek Vertebrates.csv
 
 mack_creek_df <- read_csv("mack_creek_vertebrates.csv") %>% 
-  clean_names() # Change column names to lower case
+  clean_names() %>%  # Change column names to lower case
+  rename("channeltype" = "unittype") # Rename "unittype" column to "channeltype" for more clarity
 ```
 
 ## Introduction
@@ -39,13 +40,9 @@ mack_creek_df <- read_csv("mack_creek_vertebrates.csv") %>%
 ```{r}
 # Data frame to pull for all results. 
 mack_creek_data <- mack_creek_df %>% 
-<<<<<<< HEAD
-  select(entity, section, weight)
+  select(entity, section, channeltype, weight, year)
 
 # Note: Weights is in grams (from metadata)
-=======
-  select(entity, section, weight, year)
->>>>>>> bd7799770dc93d59e94041fead3f724fd7137576
 ```
 
 ### A. Annual Salamander Counts in Old Growth (OG) and Clear Cut (CC) Sections of Mack Creek
@@ -72,6 +69,11 @@ ggplot(data = mack_creek_cc_og, aes(x = year)) +
 ### C. Hypothesis Testing: Significant Difference in Location?
 
 ### D. Comparison of Salamander Weights in OG and CC Sections
+
+```{r}
+
+```
+
 
 ### E. Comparison of Salamander Weights in Pools, Cascades, and Side Channels
 
