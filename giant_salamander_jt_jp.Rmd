@@ -44,6 +44,8 @@ mack_creek_data <- mack_creek_df %>%
 
 ### A. Annual Salamander Counts in Old Growth (OG) and Clear Cut (CC) Sections of Mack Creek
 
+hello
+
 ### B. Salamander Counts by Channel Classification
 
 ### C. Hypothesis Testing: Significant Difference in Location?
