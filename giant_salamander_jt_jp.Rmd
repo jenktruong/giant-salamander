@@ -21,6 +21,7 @@ library(here)
 library(kableExtra)
 library(ggbeeswarm)
 library(car)
+library(ggridges)
 
 # Read in Mack Creek Vertebrates.csv
 
@@ -122,12 +123,49 @@ mc_props <- mc_props %>%
 mack_creek_weight_section <- mack_creek_weight_2017 %>% 
   select(-channeltype) # Remove channel column
 
+<<<<<<< HEAD
 # Create ridgeline plots and qq plots to see data distribution
 
 # Ridgeline plots
 ggplot(data = mack_creek_weight_section,
        aes(x = section, y = weight)) +
   geom_beeswarm(aes(color = section))
+=======
+# Find mean weight for the two sections
+mc_weight_section_summary <- mack_creek_weight_section %>% 
+  group_by(section) %>%  # Group by section
+  summarize(
+    mean_weight = mean(weight, na.rm = TRUE), # Find mean, remove NA values
+    sd_weight = sd(weight, na.rm = TRUE), # Find standard deviation, remove NA values
+    sample_size = n(), # We don't use count() because data is already grouped by section
+    se_weight = sd_weight / sqrt(sample_size), # Find standard error
+    var_weight = var(weight, na.rm = TRUE) # Find variance
+  ) 
+
+# Create beeswarm plots and qq plots to see data distribution
+
+# Beeswarm plots
+
+ggplot() + # Leave ggplot blank to graph from multiple data frames
+  geom_beeswarm(data = mack_creek_weight_section, # Start beeswarm plot
+                aes(x = section, 
+                    y = weight,
+                    color = section,
+                    alpha = 0.5)) + # Change transparency to half
+  scale_x_discrete(labels = c("Clear Cut", "Old Growth")) + # Rename x-axis labels
+  geom_point(data = mc_weight_section_summary, # Graph points for mean weight
+             aes(x = section, y = mean_weight),
+             color = "red", # Color mean point red
+             size = 1.5) + # Change size to 1.5
+  geom_errorbar(data = mc_weight_section_summary, # Graph error bar for mean weight
+                aes(x = section,
+                    ymin = mean_weight - sd_weight,
+                    ymax = mean_weight + sd_weight),
+                width = 0.1,
+                color = "red") + # Color them with same color as mean point
+  theme_minimal()
+  
+>>>>>>> d9e180c5a76c0532a58fc3593bc53e8f69c75c13
 ```
 
 
