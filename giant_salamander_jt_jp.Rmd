@@ -40,6 +40,8 @@ mack_creek_df <- read_csv("mack_creek_vertebrates.csv") %>%
 # Data frame to pull for all results. 
 mack_creek_data <- mack_creek_df %>% 
   select(entity, section, weight)
+
+# Note: Weights is in grams (from metadata)
 ```
 
 ### A. Annual Salamander Counts in Old Growth (OG) and Clear Cut (CC) Sections of Mack Creek
