@@ -48,16 +48,20 @@ mack_creek_data <- mack_creek_df %>%
 # Counting for section (clear and old growth)
 
 mack_creek_cc_og <- mack_creek_data %>% 
-  count(section, year)
+  group_by(section, year) %>% 
+  summarize(counts = sum(entity))
 
-mack_creek_cc_og
 ```
 
 ```{r}
 # Graph for changes in yearly salamander population in these two sections over time 
 
-ggplot(data = mack_creek_cc_og, aes(x = year)) +
-  geom_histogram(aes(fill = n))
+ggplot(data = mack_creek_cc_og, aes(x = year, y = counts)) +
+  geom_line(aes(color = section), size = 1) +
+  scale_x_continuous(lim = c(1987, 2017),
+                     expand= c(0,0)) +
+  theme_bw()
+
 ```
 
 
