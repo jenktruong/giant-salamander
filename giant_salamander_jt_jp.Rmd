@@ -27,6 +27,8 @@ mack_creek_df <- read_csv("mack_creek_vertebrates.csv") %>%
 
 ## Data and Methods
 
+"Old Growth" refers to the 500 year old coniferous forest upstream, while "Clear Cut" refers to the clear-cut section of the forest.
+
 ## Results
 
 ### A. Annual Salamander Counts in Old Growth (OG) and Clear Cut (CC) Sections of Mack Creek
