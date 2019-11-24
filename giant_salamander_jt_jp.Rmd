@@ -75,13 +75,25 @@ ggplot(data = mack_creek_cc_og, aes(x = year, y = counts)) +
 ### D. Comparison of Salamander Weights in OG and CC Sections
 
 ```{r}
-mack_creek_weight_section <- mack_creek_data %>% 
-  group_by(section)
+# Clean data subset so that it only includes 2017 observations
+mack_creek_weight_2017 <- mack_creek_data %>% 
+  filter(year == 2017) 
+
+# Further filter subset so that it only considers creek section for now
+mack_creek_weight_section <- mack_creek_weight_2017 %>% 
+  select(-channeltype) # Remove channel column
   
 ```
 
 
 ### E. Comparison of Salamander Weights in Pools, Cascades, and Side Channels
+
+```{r}
+# Create another subset for considering channel type only
+mack_creek_weight_channel <- mack_creek_weight_2017 %>% 
+  select(-section) # Remove section column
+```
+
 
 ## Summary
 
