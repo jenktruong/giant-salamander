@@ -90,7 +90,13 @@ mack_creek_weight_2017 <- mack_creek_data %>%
 # Further filter subset so that it only considers creek section for now
 mack_creek_weight_section <- mack_creek_weight_2017 %>% 
   select(-channeltype) # Remove channel column
-  
+
+# Create ridgeline plots and qq plots to see data distribution
+
+# Ridgeline plots
+ggplot(data = mack_creek_weight_section,
+       aes(x = weight)) +
+  geom_beeswarm(aes(color = section))
 ```
 
 
