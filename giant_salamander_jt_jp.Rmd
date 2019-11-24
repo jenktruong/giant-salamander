@@ -92,6 +92,8 @@ mack_creek_weight_2017 <- mack_creek_data %>%
 
 ### D. Comparison of Salamander Weights in OG and CC Sections
 
+The salamanders of the OG and CC sections are unpaired, so we will do an unpaired t-test and the Mann-whitney U test to see if they are significantly different from each other.
+
 ```{r}
 # Further filter subset so that it only considers creek section for now
 mack_creek_weight_section <- mack_creek_weight_2017 %>% 
