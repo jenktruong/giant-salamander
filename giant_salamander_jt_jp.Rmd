@@ -83,6 +83,32 @@ ggplot(data = mack_creek_cc_og, aes(x = year, y = counts)) +
 mack_creek_weight_2017 <- mack_creek_data %>% 
   filter(year == 2017)
 
+# Determining the counts of salamanders in different channel types in different forest sections for 2017
+
+mack_creek_class_count <- mack_creek_weight_2017 %>% 
+  filter(channeltype %in% c("C", "P", "SC")) %>% 
+  count(channeltype, section)
+
+mack_creek_class_table <- mack_creek_class_count %>% 
+  pivot_wider(names_from = section, values_from = n)
+
+```
+
+```{r}
+# Now finding the proportions
+mc_props <- mack_creek_class_table %>% 
+  janitor::adorn_percentages(denominator = "row") %>% 
+  adorn_pct_formatting(digits = 0) %>% 
+  adorn_ns(position = "front")
+
+mc_props <- mc_props %>% 
+  rename("Channel type" = channeltype,
+         "Clear cut" = CC,
+         "Original growth" = OG)
+```
+
+
+
 
 ```
 
@@ -100,7 +126,7 @@ mack_creek_weight_section <- mack_creek_weight_2017 %>%
 
 # Ridgeline plots
 ggplot(data = mack_creek_weight_section,
-       aes(x = weight)) +
+       aes(x = section, y = weight)) +
   geom_beeswarm(aes(color = section))
 ```
 
