@@ -293,7 +293,7 @@ weight_channel_anova <- aov(weight ~ channeltype, data = mack_creek_weight_chann
 summary(weight_channel_anova)
 ```
 
-The F-statistic is `r weight_channel_anova$statistic` and the p-value is `r weight_schannel_anova$p.value`. We have sufficient evidence to reject the null hypothesis that the mean weights in all three channel types are the same.
+The F-statistic is `r weight_channel_anova$statistic` and the p-value is `r weight_channel_anova$p.value`. We have sufficient evidence to reject the null hypothesis that the mean weights in all three channel types are the same.
 
 However, because we previously showed that the variances between the two are not the same, we will use the Kruskal-Wallis test instead. This test compares medians instead of means.
 
