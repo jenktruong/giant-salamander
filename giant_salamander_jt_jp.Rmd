@@ -134,7 +134,7 @@ ggplot(data = mack_creek_weight_section,
   geom_qq() +
   facet_wrap(~section) # Facet by section
 ```
-The histograms show that the data of salamander weights for both sections are positively skewed, and the qq plots are exponential. 
+The histograms show that the data of salamander weights for both sections are positively skewed, and the qq plots are exponentially rising. 
 
 ```{r}
 # Find mean weight for the two sections
@@ -210,7 +210,7 @@ mean_weight_og <- mack_creek_weight_section %>%
 weight_section_ttest <- t.test(mean_weight_cc, mean_weight_og, paired = FALSE)
 ```
 
-The t-statistic is `r weight_section_ttest$statistic` and the p-value is `r weight_section_ttest$p.value`. We have sufficient evidence to reject the null hypothesis that the means in both sections are the same.
+The t-statistic is `r weight_section_ttest$statistic` and the p-value is `r weight_section_ttest$p.value`. We have sufficient evidence to reject the null hypothesis that the mean weights in both sections are the same.
 
 However, because we previously showed that the variances between the two are not the same, we will use the non-parametric test, the Mann-Whitney U, instead. This test compares medians instead of means.
 
@@ -228,12 +228,86 @@ The U statistic is `r weight_section_wilcox$statistic` and the p-value is `r wei
 
 ### E. Comparison of Salamander Weights in Pools, Cascades, and Side Channels
 
+Now we will explore the data among the three channel classifications.
+
 ```{r}
 # Create another subset for considering channel type only
 mack_creek_weight_channel <- mack_creek_weight_2017 %>% 
-  select(-section) # Remove section column
+  select(-section) %>% # Remove section column
+  filter(channeltype %in% c("C", "P", "SC")) # Remove rows that contain IP
+
+# Faceted histograms
+
+ggplot(data = mack_creek_weight_channel, 
+       aes(x = weight)) +
+  geom_histogram() +
+  facet_wrap(~channeltype) # Facet by section
+
+# Faceted QQ plot
+
+ggplot(data = mack_creek_weight_channel, 
+       aes(sample = weight)) +
+  geom_qq() +
+  facet_wrap(~channeltype) # Facet by section
 ```
 
+The histograms show that the data of salamander weights for the three channel types are positively skewed, and the qq plots are exponentially rising.
+
+```{r}
+# Find mean weight for the two sections
+mc_weight_channel_summary <- mack_creek_weight_channel %>% 
+  group_by(channeltype) %>%  # Group by section
+  summarize(
+    mean_weight = mean(weight, na.rm = TRUE), # Find mean, remove NA values
+    sd_weight = sd(weight, na.rm = TRUE), # Find standard deviation, remove NA values
+    sample_size = n(), # We don't use count() because data is already grouped by section
+    se_weight = sd_weight / sqrt(sample_size), # Find standard error
+    var_weight = var(weight, na.rm = TRUE) # Find variance
+  ) 
+```
+
+However, according to the summary table, the sample sizes are large. We can assume the distribution of mean weight is normal due to the Central Limit Theorem. 
+
+Levene's Test (hypothesis test for equal variances):
+```{r}
+# H0: group variances are equal
+
+leveneTest(weight ~ channeltype, data = mack_creek_weight_channel)
+```
+
+Conclusion: Reject the null hypothesis that variances are equal.
+
+After doing our exploratory analysis, we decide to do an **one-way ANOVA ** test and a **Kruskal-wallis** test to explore salamander weights between the three channel classifications. There are three samples to test, so we need to use ANOVA. 
+
+#### One-way ANOVA test
+
+Our random variable is the salamander weight (in grams), and our levels are the three channel classificataions: pools, cascades, and side channels.
+
+**Null Hypothesis:** The mean salamander weights in the three channel types are the same.
+
+**Alternative Hypothesis:** The mean salamander weights in the three channel types are NOT the same.
+
+```{r}
+weight_channel_anova <- aov(weight ~ channeltype, data = mack_creek_weight_channel)
+
+summary(weight_channel_anova)
+```
+
+The F-statistic is `r weight_channel_anova$statistic` and the p-value is `r weight_schannel_anova$p.value`. We have sufficient evidence to reject the null hypothesis that the mean weights in all three channel types are the same.
+
+However, because we previously showed that the variances between the two are not the same, we will use the Kruskal-Wallis test instead. This test compares medians instead of means.
+
+#### Kruskal-Wallis Test
+
+**Null Hypothesis:** The ranks of the salamander weights are the same among all three channel types.
+
+**Alternative Hypothesis:** The ranks of the salamander weights are NOT the same in at least TWO of the channel types.
+
+```{r}
+weight_channel_kruskal <- kruskal.test(weight ~ channeltype, data = mack_creek_weight_channel)
+```
+
+The U statistic is `r weight_channel_kruskal$statistic` and the p-value is `r weight_channel_kruskal$p.value`. We have sufficient evidence to reject the null hypothesis that the ranks between the two sections are the same.
 
 ## Summary
 
