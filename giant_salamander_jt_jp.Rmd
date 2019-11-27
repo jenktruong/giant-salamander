@@ -123,16 +123,18 @@ The salamanders of the OG and CC sections are unpaired, so we will do an unpaire
 ```{r}
 # Further filter subset so that it only considers creek section for now
 mack_creek_weight_section <- mack_creek_weight_2017 %>% 
-  select(-channeltype) # Remove channel column
+  select(-channeltype) 
+  
+  # Remove channel column
 
-<<<<<<< HEAD
+
 # Create ridgeline plots and qq plots to see data distribution
 
 # Ridgeline plots
 ggplot(data = mack_creek_weight_section,
        aes(x = section, y = weight)) +
   geom_beeswarm(aes(color = section))
-=======
+
 # Find mean weight for the two sections
 mc_weight_section_summary <- mack_creek_weight_section %>% 
   group_by(section) %>%  # Group by section
