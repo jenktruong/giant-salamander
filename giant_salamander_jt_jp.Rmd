@@ -35,7 +35,7 @@ mack_creek_df <- read_csv(here::here("raw data", "mack_creek_vertebrates.csv")) 
 
 The Pacific giant salamander, *Dicamptodon tenebrosus*, is native to the Pacific northwest, and at 13 inches in length, it is one of the largest salamanders in North America (OregonWild). Researchers rely on the salamanders to indicate water quality levels, for these amphibians only live in healthy mountain streams. However, habitat loss through logging and other human activities has raised concerns for the continuation of the species (OregonWild). 
 
-Populations of Pacific giant salmanders have been monitored since 1987 (Gregory). A group Oregon State researchers stationed at the HJ Andrews Experimental Forest were already researching the West Slope cutthroat trout, *Onchorhyncus clarki clarki*, at Mack Creek when they decided to include the salamanders in their studies. Each specimen was measured and weighed before release. The number and weight of salamanders were compared between the different areas where they were found, the forest sections (clearcut and old growth) and the channel types (channel, pool, and side channel). 
+Populations of Pacific giant salmanders have been monitored since 1987 (Gregory). A group Oregon State researchers stationed at the HJ Andrews Experimental Forest were already researching the West Slope cutthroat trout, *Onchorhyncus clarki clarki*, at Mack Creek when they decided to include the salamanders in their studies. Each specimen was measured and weighed before release. The number and weight of salamanders were compared between the different areas where they were found, the forest sections (clearcut(CC) and old growth(OG)) and the channel types (channel, pool, and side channel). 
 
 ![](Giant salamander.jpg)
 ***Figure 1.*** *Pacific giant salamander. Credit: [Jeffrey Marsten](https://en.wikipedia.org/wiki/Pacific_giant_salamander#/media/File:Dicamptodon_tenebrosus_2.JPG)*
@@ -69,7 +69,7 @@ mack_creek_cc_og <- mack_creek_data %>%
 
 ```
 
-The number of giant salamanders did not change much between the two forest sections. Though more salamanders were found in clearcut (n = `r mack_creek_cc_og$counts[1]`) than old growth (n = `r mack_creek_cc_og$counts[32]`) sections in 1987, both soon followed the similar trends of abundance. Salamander counts increased toward 2017, though they seemed to reach their peak for both sections from 2008 to 2012. Then both dipped unil 2015, when populations numbers started rising again into 2017 (clearcut = `r mack_creek_cc_og$counts[31]`, old growth = `r mack_creek_cc_og$counts[62]`).  
+The number of giant salamanders did not change much between the two forest sections. Though more salamanders were found in clearcut (n = `r mack_creek_cc_og$counts[1]`) than old growth (n = `r mack_creek_cc_og$counts[32]`) sections in 1987, both soon followed the similar trends of abundance. Salamander counts increased toward 2017, though they seemed to reach their peak for both sections from 2008 to 2012. Then both dipped unil 2015, when populations numbers started rising again into 2017 (CC = `r mack_creek_cc_og$counts[31]`, OG = `r mack_creek_cc_og$counts[62]`).  
 
 ```{r}
 # Graph for changes in yearly salamander population in these two sections over time 
@@ -96,6 +96,7 @@ ggsave(here::here("figures", "Yearly Salamander Population.png"))
 *Figure 3. Change in yearly giant salamander abundance between different forest sections(light green: clear cut, dark green: old growth). Both counts increased through the years without many visual differences.*
 
 ### B. Salamander Counts by Channel Classification
+
 
 ```{r}
 # Clean data subset so that it only includes 2017 observations
@@ -124,6 +125,10 @@ mack_creek_class_table <- mack_creek_class_count %>%
 
 ```
 
+Just looking populations in the final data collection year, 2017, the proportions of giant salamanders were almost 50% when comparing salamander counts for all channel types across clearcut and original growth sections. This suggests salamanders had almost no preferences between the forest sections, which mirrors the visual results found in Results A. However, there is a large different in salamander counts between the different channel types. There were more giant salamanders in channels (CC = `r mack_creek_class_count$n[1]`, OG = `r mack_creek_class_count$n[2]`) than from the numbers in pools (CC = `r mack_creek_class_count$n[3]`, OG = `r mack_creek_class_count$n[4]`) and side channels (CC = `r mack_creek_class_count$n[5]`, OG = `r mack_creek_class_count$n[6]`) combined. 
+
+
+*Table 1. The number of giant salamanders found across different parts of the forest. The proportions were calculated and found at almost 50% between CC and OG sections. However, numbers found in channels greatly exceeded those found in pools or side channels.* 
 ```{r}
 # Now finding the proportions
 
@@ -152,6 +157,7 @@ mc_table
 ```
 
 `r mc_table`
+
 
 ### C. Hypothesis Testing: Significant Difference in Location?
 
