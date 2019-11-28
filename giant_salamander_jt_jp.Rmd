@@ -22,6 +22,7 @@ library(kableExtra)
 library(ggbeeswarm)
 library(car)
 library(ggridges)
+library(data.table)
 
 # Read in Mack Creek Vertebrates.csv
 
@@ -32,9 +33,15 @@ mack_creek_df <- read_csv("mack_creek_vertebrates.csv") %>%
 
 ## Introduction
 
+![](Giant salamander.jpg)
+***Figure 1.*** *Pacific giant salamander. Credit: [Jeffrey Marsten](https://en.wikipedia.org/wiki/Pacific_giant_salamander#/media/File:Dicamptodon_tenebrosus_2.JPG)*
+
 ## Data and Methods
 
 "Old Growth" refers to the 500 year old coniferous forest upstream, while "Clear Cut" refers to the clear-cut section of the forest.
+
+![](Mack creek.png)
+***Figure 2.*** *Map of Mack Creek within the HJ Andrews Experimental Forest. Identified with a red star. Credit: [Oregon State](https://www.researchgate.net/figure/Map-of-study-sites-and-the-HJ-Andrews-Experimental-forest-HJA-Each-dot-represents-a_fig1_314206020)*
 
 ## Results
 
@@ -84,11 +91,22 @@ ggplot(data = mack_creek_cc_og, aes(x = year, y = counts)) +
 mack_creek_weight_2017 <- mack_creek_data %>% 
   filter(year == 2017)
 
+
 # Determining the counts of salamanders in different channel types in different forest sections for 2017
 
 mack_creek_class_count <- mack_creek_weight_2017 %>% 
   filter(channeltype %in% c("C", "P", "SC")) %>% 
   count(channeltype, section)
+
+# Changing the labels for the channel types. Can't seem to change the row names in the actual table below and can't use pipe operator to combine these steps. 
+
+mack_creek_class_count$channeltype <- gsub("C", "Channel", mack_creek_class_count$channeltype) 
+
+mack_creek_class_count$channeltype <- gsub("P", "Pool", mack_creek_class_count$channeltype)
+
+mack_creek_class_count$channeltype <- gsub("SChannel", "Side Channel", mack_creek_class_count$channeltype)
+
+# Creating a data table from the counts
 
 mack_creek_class_table <- mack_creek_class_count %>% 
   pivot_wider(names_from = section, values_from = n)
@@ -97,19 +115,48 @@ mack_creek_class_table <- mack_creek_class_count %>%
 
 ```{r}
 # Now finding the proportions
+
 mc_props <- mack_creek_class_table %>% 
   janitor::adorn_percentages(denominator = "row") %>% 
   adorn_pct_formatting(digits = 0) %>% 
   adorn_ns(position = "front")
 
+# Setting up in a kable table 
+
 mc_props <- mc_props %>% 
   rename("Channel type" = channeltype,
          "Clear cut" = CC,
          "Original growth" = OG)
+
+mc_table <- kable(mc_props) %>% 
+  kable_styling(bootstrap_options = "striped",
+                  full_width = F,
+                position = "left") %>% 
+  add_header_above(c("Proportion of giant salamaders in different channel types and forest sections" = 3))
+
+
+mc_table
+
+
 ```
 
+`r mc_table`
 
 ### C. Hypothesis Testing: Significant Difference in Location?
+
+```{r}
+# Testing the association by chi squared tests
+
+chi_counts <- mack_creek_class_table %>% 
+  select(-channeltype)
+
+chi_counts
+
+mack_creek_chi <- chisq.test(chi_counts)
+
+mack_creek_chi
+```
+
 
 ### D. Comparison of Salamander Weights in OG and CC Sections
 
@@ -122,8 +169,6 @@ mack_creek_weight_section <- mack_creek_weight_2017 %>%
   
   # Remove channel column
 
-
-<<<<<<< HEAD
 # Create ridgeline plots and qq plots to see data distribution
 
 # Ridgeline plots
@@ -131,7 +176,7 @@ ggplot(data = mack_creek_weight_section,
        aes(x = section, y = weight)) +
   geom_beeswarm(aes(color = section))
 
-=======
+
 # Faceted histograms
 
 ggplot(data = mack_creek_weight_section, 
@@ -149,7 +194,6 @@ ggplot(data = mack_creek_weight_section,
 The histograms show that the data of salamander weights for both sections are positively skewed, and the qq plots are exponentially rising. 
 
 ```{r}
->>>>>>> 561355ac02df2d7693a20fc12d61998a6d38b45f
 # Find mean weight for the two sections
 mc_weight_section_summary <- mack_creek_weight_section %>% 
   group_by(section) %>%  # Group by section
