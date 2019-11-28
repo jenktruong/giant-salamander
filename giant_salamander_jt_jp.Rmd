@@ -26,12 +26,16 @@ library(data.table)
 
 # Read in Mack Creek Vertebrates.csv
 
-mack_creek_df <- read_csv("mack_creek_vertebrates.csv") %>% 
+mack_creek_df <- read_csv(here::here("raw data", "mack_creek_vertebrates.csv")) %>% 
   clean_names() %>%  # Change column names to lower case
   rename("channeltype" = "unittype") # Rename "unittype" column to "channeltype" for more clarity
 ```
 
 ## Introduction
+
+The Pacific giant salamander, *Dicamptodon tenebrosus*, is native to the Pacific northwest, and at 13 inches in length, it is one of the largest salamanders in North America (OregonWild). Researchers rely on the salamanders to indicate water quality levels, for these amphibians only live in healthy mountain streams. However, habitat loss through logging and other human activities has raised concerns for the continuation of the species (OregonWild). 
+
+Populations of Pacific giant salmanders have been monitored since 1993 (Gregory).A group Oregon State researchers stationed at the HJ Andrews Experimental Forest were already researching the West Slope cutthroat trout, *Onchorhyncus clarki clarki*, at Mack Creek when they decided to include the salamanders in their studies. Each specimen was measured and weighed before release. The number and weight of salamanders were compared between the different areas where they were found, the forest sections (clearcut and old growth) and the channel types (channel, pool, and side channel). 
 
 ![](Giant salamander.jpg)
 ***Figure 1.*** *Pacific giant salamander. Credit: [Jeffrey Marsten](https://en.wikipedia.org/wiki/Pacific_giant_salamander#/media/File:Dicamptodon_tenebrosus_2.JPG)*
@@ -41,7 +45,7 @@ mack_creek_df <- read_csv("mack_creek_vertebrates.csv") %>%
 "Old Growth" refers to the 500 year old coniferous forest upstream, while "Clear Cut" refers to the clear-cut section of the forest.
 
 ![](Mack creek.png)
-***Figure 2.*** *Map of Mack Creek within the HJ Andrews Experimental Forest. Identified with a red star. Credit: [Oregon State](https://www.researchgate.net/figure/Map-of-study-sites-and-the-HJ-Andrews-Experimental-forest-HJA-Each-dot-represents-a_fig1_314206020)*
+***Figure 2.*** *Map of Mack Creek within the HJ Andrews Experimental Forest. Identified with a red star. Credit: [Dana Warren-Oregon State](https://www.researchgate.net/figure/Map-of-study-sites-and-the-HJ-Andrews-Experimental-forest-HJA-Each-dot-represents-a_fig1_314206020)*
 
 ## Results
 
@@ -80,6 +84,8 @@ ggplot(data = mack_creek_cc_og, aes(x = year, y = counts)) +
                      values = c("CC" = "darkolivegreen1",
                                 "OG" = "darkgreen")) +
   theme_bw()
+
+ggsave(here::here("figures", "Yearly Salamander Population.png"))
 
 ```
 
