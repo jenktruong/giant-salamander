@@ -260,6 +260,9 @@ ggplot() + # Leave ggplot blank to graph from multiple data frames
                 color = "red") + # Color them with same color as mean point
   theme_minimal()
 
+# Save graph
+ggsave(here("figures", "Average Salamander Weight by Section.png"))
+
 ```
 
 #### Unpaired T-test:
