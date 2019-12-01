@@ -348,14 +348,24 @@ Conclusion: Reject the null hypothesis that variances are equal.
 
 ```{r}
 ggplot() + # Leave ggplot blank to graph from multiple data frames
-  geom_density_ridges(data = mack_creek_weight_channel, # Start beeswarm plot
-                aes(x = weight, 
-                    y = channeltype,
+  geom_beeswarm(data = mack_creek_weight_channel, # Start beeswarm plot
+                aes(x = channeltype, 
+                    y = weight,
                     color = channeltype,
                     fill = channeltype,
                     alpha = 0.5), # Change transparency to half
                 show.legend = FALSE) +
-  scale_y_discrete(labels = c("Cascade", "Pool", "Side Channel")) + # Rename x-axis labels
+  scale_x_discrete(labels = c("Cascade", "Pool", "Side Channel")) + # Rename x-axis labels
+    geom_point(data = mc_weight_channel_summary, # Graph points for mean weight
+             aes(x = channeltype, y = mean_weight),
+             color = "red", # Color mean point red
+             size = 1.5) + # Change size to 1.5
+  geom_errorbar(data = mc_weight_channel_summary, # Graph error bar for mean weight
+                aes(x = channeltype,
+                    ymin = mean_weight - sd_weight,
+                    ymax = mean_weight + sd_weight),
+                width = 0.1,
+                color = "red") +
   theme_minimal()
 ```
 
