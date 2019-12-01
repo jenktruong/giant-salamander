@@ -155,7 +155,6 @@ mc_table
 
 
 ```
-
 `r mc_table`
 
 
