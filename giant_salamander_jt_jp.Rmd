@@ -23,6 +23,7 @@ library(ggbeeswarm)
 library(car)
 library(ggridges)
 library(data.table)
+library(effsize)
 
 # Read in Mack Creek Vertebrates.csv
 
@@ -181,17 +182,9 @@ First, we will check the distribution of the data.
 ```{r}
 # Further filter subset so that it only considers creek section for now
 mack_creek_weight_section <- mack_creek_weight_2017 %>% 
-  select(-channeltype) 
-  
-  # Remove channel column
+  select(-channeltype) # Remove channel column
 
-# Create ridgeline plots and qq plots to see data distribution
-
-# Ridgeline plots
-ggplot(data = mack_creek_weight_section,
-       aes(x = section, y = weight)) +
-  geom_beeswarm(aes(color = section))
-
+# Create histograms and qq plots to see data distribution
 
 # Faceted histograms
 
