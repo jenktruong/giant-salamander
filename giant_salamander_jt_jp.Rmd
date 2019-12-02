@@ -402,6 +402,8 @@ weight_channel_kruskal <- kruskal.test(weight ~ channeltype, data = mack_creek_w
 
 The U statistic is `r weight_channel_kruskal$statistic` and the p-value is `r weight_channel_kruskal$p.value`. We have sufficient evidence to reject the null hypothesis that the ranks between the two sections are the same.
 
+Because the data distribution for average salamander weights is positively skewed for both variables (section and channel type), comparing means may not be the best way to compare the groups. Comparing medians through non-parametric tests.
+
 ## Summary
 
 ## References
