@@ -388,21 +388,7 @@ summary(weight_channel_anova)
 
 The F-statistic is `r weight_channel_anova$statistic` and the p-value is `r weight_channel_anova$p.value`. We have sufficient evidence to reject the null hypothesis that the mean weights in all three channel types are the same.
 
-However, because we previously showed that the variances between the two are not the same, we will use the Kruskal-Wallis test instead. This test compares medians instead of means.
-
-#### Kruskal-Wallis Test
-
-**Null Hypothesis:** The ranks of the salamander weights are the same among all three channel types.
-
-**Alternative Hypothesis:** The ranks of the salamander weights are NOT the same in at least TWO of the channel types.
-
-```{r}
-weight_channel_kruskal <- kruskal.test(weight ~ channeltype, data = mack_creek_weight_channel)
-```
-
-The U statistic is `r weight_channel_kruskal$statistic` and the p-value is `r weight_channel_kruskal$p.value`. We have sufficient evidence to reject the null hypothesis that the ranks between the two sections are the same.
-
-Because the data distribution for average salamander weights is positively skewed for both variables (section and channel type), comparing means may not be the best way to compare the groups. Comparing medians through non-parametric tests.
+Because the data distribution for average salamander weights is positively skewed for both variables (section and channel type), comparing means may not be the best way to compare the groups. Comparing medians through non-parametric tests like the Kruskal-Wallis test would be more preferable in this case.
 
 ## Summary
 
