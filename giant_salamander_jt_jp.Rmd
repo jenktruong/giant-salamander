@@ -216,6 +216,8 @@ mc_weight_section_summary <- mack_creek_weight_section %>%
     se_weight = sd_weight / sqrt(sample_size), # Find standard error
     var_weight = var(weight, na.rm = TRUE) # Find variance
   ) 
+
+summary(mc_weight_section_summary)
 ```
 
 However, according to the summary table, the sample sizes are large. We can assume the distribution of mean weight is normal due to the Central Limit Theorem. 
@@ -232,16 +234,26 @@ Conclusion: Reject the null hypothesis that variances are equal.
 ```{r}
 # Create histograms to show distribution
 
+# First, create vector for naming forest section
+section_name <- c("Clear Cut", "Old Growth")
+names(section_name) <- c("CC", "OG")
+
 # Histograms
 
-ggplot() + # Leave ggplot blank to graph from multiple data frames
-  geom_histogram(data = mack_creek_weight_section, # Start beeswarm plot
-                aes(x = weight)) + 
+ggplot(data = mack_creek_weight_section,
+       aes(x = weight)) +
+  geom_histogram(color = "darkgreen",
+                fill = "darkgreen") + 
   labs(x = "Average Salamander Weight",
        y = "Number of Salamanders",
        title = "Distribution of Giant Salamander Weights in Mack Creek, 2017") + # Add labels and title
   theme_minimal() +
-  facet_wrap(~section) # Facet histogram by section
+  theme(
+    strip.background = element_rect(color="black", size=1, linetype="solid"), # Change format of facet labels
+    strip.text = element_text(face = "bold") # Bold facet labels
+    ) +
+  facet_wrap(~section, # Facet histogram by section
+             labeller = labeller(section = section_name)) # Rename facet labels to section name
 
 # Save graph
 ggsave(here("figures", "Average Salamander Weight by Section.png"))
