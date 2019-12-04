@@ -1,5 +1,5 @@
 ---
-title: "Pacific Giant Salamander"
+title: "Analysis of Pacific Giant Salamanders in Mack Creek"
 author: "Jennifer Truong & Joanne Pham"
 date: "11/21/2019"
 output: html_document
@@ -178,7 +178,7 @@ Based on the substantial differences in salamander numbers between channel types
 
 ### D. Comparison of Salamander Weights in OG and CC Sections
 
-First, we checked the distribution of the salamander weight data. After our analysis, we discovered that the data for both sections are positively skewed. The QQ plots do not show a linear relationship, meaning that the distribution is not normal. 
+First, we checked the distribution of the salamander weight data in the two forest sections. After our analysis, we discovered that the data for both sections are positively skewed. The QQ plots do not show a linear relationship, meaning that the distribution is not normal. 
 
 ```{r}
 # Further filter subset so that it only considers creek section for now
@@ -195,27 +195,34 @@ mc_weight_section_summary <- mack_creek_weight_section %>%
     se_weight = sd_weight / sqrt(sample_size), # Find standard error
     var_weight = var(weight, na.rm = TRUE) # Find variance
   ) 
-
-summary(mc_weight_section_summary)
 ```
 
-However, according to the summary table, the sample sizes are large. We can assume the distribution of mean weight is normal due to the Central Limit Theorem. 
+The sample sizes for both sections ($n_{CC}$ = `r mc_weight_section_summary$sample_size[1]` and $n_{OG}$ = `r mc_weight_section_summary$sample_size[2]`) are large enough for us to assume that the distribution of mean weight is normal due to the Central Limit Theorem.
 
-Levene's Test (hypothesis test for equal variances):
 ```{r}
+# Levene's Test (hypothesis test for equal variances):
 # H0: group variances are equal
 
 leveneTest(weight ~ section, data = mack_creek_weight_section)
+
+# Null hypothesis is rejected but largest variance is greater than 4x the smallest variance
 ```
 
-Conclusion: Reject the null hypothesis that variances are equal.
 
 ```{r}
-# Create histograms to show distribution
-
 # First, create vector for naming forest section
 section_name <- c("Clear Cut", "Old Growth")
 names(section_name) <- c("CC", "OG")
+
+# Next, store mean weights for both sections as vectors
+
+mean_weight_cc <- mack_creek_weight_section %>% 
+  filter(section == "CC") %>% # Keep only rows that are in CC
+  pull(weight) # Pull weight column as vector
+
+mean_weight_og <- mack_creek_weight_section %>% 
+  filter(section == "OG") %>% # Keep only rows that are in CC
+  pull(weight) # Pull weight column as vector
 
 # Histograms
 
@@ -223,9 +230,10 @@ ggplot(data = mack_creek_weight_section,
        aes(x = weight)) +
   geom_histogram(color = "darkgreen",
                 fill = "darkgreen") + 
-  labs(x = "Average Salamander Weight",
+  labs(x = "Salamander Weight (g)",
        y = "Number of Salamanders",
-       title = "Distribution of Giant Salamander Weights in Mack Creek, 2017") + # Add labels and title
+       title = "Distribution of Giant Salamander Weights in Mack Creek by Forest Section, 2017") + # Add labels and title
+  geom_point(data = mc_weight_section_summary, aes(x = mean_weight, y = 200), col="red", size = 2) + # Show mean for each channel type as a red point
   theme_minimal() +
   theme(
     strip.background = element_rect(color="black", size=1, linetype="solid"), # Change format of facet labels
@@ -238,7 +246,7 @@ ggplot(data = mack_creek_weight_section,
 ggsave(here("figures", "Average Salamander Weight by Section.png"))
 
 ```
-***Figure 6.*** *Distribution of salamader weights in clear cut and old growth forest sections. The red dot and lines represent the mean weight and error bar. Visually, the variance of salamanders weights *
+***Figure 6.*** *Distribution of salamader weights in clear cut and old growth forest sections. The red dots represent the mean weight. Visually, the variance of salamanders weights *
 
 After doing our exploratory analysis, we decide to do a **unpaired, 2 sample two-sided T-test** to explore mean salamander weights between the two sections. We assume that the data is unpaired because the two sections are directly connected to each other. 
 
@@ -249,28 +257,19 @@ After doing our exploratory analysis, we decide to do a **unpaired, 2 sample two
 **Alternative Hypothesis:** The mean salamander weights in both sections are nOT the same.
 
 ```{r}
-# Store mean weights for both sections as vectors
-
-mean_weight_cc <- mack_creek_weight_section %>% 
-  filter(section == "CC") %>% # Keep only rows that are in CC
-  pull(weight) # Pull weight column as vector
-
-mean_weight_og <- mack_creek_weight_section %>% 
-  filter(section == "OG") %>% # Keep only rows that are in CC
-  pull(weight) # Pull weight column as vector
-
 # Perform unpaired, 2-sample T-test
 weight_section_ttest <- t.test(mean_weight_cc, mean_weight_og, paired = FALSE)
+
+weight_section_ttest
 ```
 
-The t-statistic is `r weight_section_ttest$statistic` and the p-value is `r weight_section_ttest$p.value`. We have sufficient evidence to reject the null hypothesis that the mean weights in both sections are the same.
-Therefore, the mean salamander weights in both sections are significantly different. 
+In 2017, the mean salamander weight (g) for the clear-cut section (`r round(mc_weight_section_summary$mean_weight[1])`$\pm$ `r round(mc_weight_section_summary$sd_weight[1], 2)`, $n_{CC}$ = `r mc_weight_section_summary$sample_size[1]`) and the old growth section (`r round(mc_weight_section_summary$mean_weight[2])`$\pm$ `r round(mc_weight_section_summary$sd_weight[2], 2)`, $n_{OG}$ = `r mc_weight_section_summary$sample_size[2]`) differed significantly by a unpaired two-sample t-test (t(`r round(weight_section_ttest$parameter, 2)` = `r round(weight_section_ttest$statistic, 2)`, *p* = `r ifelse(round(weight_section_ttest$p.value, 3) == 0, "<.001", round(weight_section_ttest$p.value, 3))`).
 
 However, because we previously assumed that the variances for the two groups are not equal, the assumption of normality is invalid. A non-parametric test would be more appropriate to analyze the salamander weights from the two sections.
 
 ### E. Comparison of Salamander Weights in Pools, Cascades, and Side Channels
 
-Now we will explore the data among the three channel classifications.
+We also checked the distribution of the salamander weight data across the three channel classifications. After our analysis, we discovered that the data for all three channel types are positively skewed. The QQ plots do not show a linear relationship, meaning that the distribution is not normal. 
 
 ```{r}
 # Create another subset for considering channel type only
@@ -278,24 +277,6 @@ mack_creek_weight_channel <- mack_creek_weight_2017 %>%
   select(-section) %>% # Remove section column
   filter(channeltype %in% c("C", "P", "SC")) # Remove rows that contain IP
 
-# Faceted histograms
-
-ggplot(data = mack_creek_weight_channel, 
-       aes(x = weight)) +
-  geom_histogram() +
-  facet_wrap(~channeltype) # Facet by section
-
-# Faceted QQ plot
-
-ggplot(data = mack_creek_weight_channel, 
-       aes(sample = weight)) +
-  geom_qq() +
-  facet_wrap(~channeltype) # Facet by section
-```
-
-The histograms show that the data of salamander weights for the three channel types are positively skewed, and the qq plots are exponentially rising.
-
-```{r}
 # Find mean weight for the two sections
 mc_weight_channel_summary <- mack_creek_weight_channel %>% 
   group_by(channeltype) %>%  # Group by section
@@ -308,42 +289,51 @@ mc_weight_channel_summary <- mack_creek_weight_channel %>%
   ) 
 ```
 
-However, according to the summary table, the sample sizes are large. We can assume the distribution of mean weight is normal due to the Central Limit Theorem. 
-
-Levene's Test (hypothesis test for equal variances):
 ```{r}
+# Levene's Test
 # H0: group variances are equal
 
 leveneTest(weight ~ channeltype, data = mack_creek_weight_channel)
+
+# Null hypothesis is rejected but largest variance is greater than 4x the smallest variance, so we can use ANOVA
 ```
 
-Conclusion: Reject the null hypothesis that variances are equal.
+The sample sizes for the three channel types ($n_C$ = `r mc_weight_channel_summary$sample_size[1]`, $n_P$ = `r mc_weight_channel_summary$sample_size[2]`, and $n_{SC}$ = `r mc_weight_channel_summary$sample_size[3]`) are large enough for us to assume that the distribution of mean weight is normal due to the Central Limit Theorem. 
 
 ```{r}
+# Create vector for naming channel types
+
+channel_name <- c("Cascade", "Pool", "Side Channel")
+names(channel_name) <- c("C", "P", "SC")
+
+# Create violinplot
+
 ggplot() + # Leave ggplot blank to graph from multiple data frames
-  geom_beeswarm(data = mack_creek_weight_channel, # Start beeswarm plot
+  geom_violin(data = mack_creek_weight_channel, # Start violin plot
+              aes(x = channeltype,
+                  y = weight),
+              color = "darkgreen",
+              fill = "darkgreen",
+              alpha = 0.3) +
+  labs(x = "Channel Classification",
+       y = "Salamander Weight (g)",
+       title = "Distribution of Giant Salamander Weights in Mack Creek by Channel Type, 2017") +
+  geom_point(data = mc_weight_channel_summary, 
+             aes(x = channeltype, 
+                 y = mean_weight), 
+             col="red") + # Show mean for each channel type as a red point
+  geom_errorbar(data = mc_weight_channel_summary,
                 aes(x = channeltype, 
-                    y = weight,
-                    color = channeltype,
-                    fill = channeltype,
-                    alpha = 0.5), # Change transparency to half
-                show.legend = FALSE) +
-  scale_x_discrete(labels = c("Cascade", "Pool", "Side Channel")) + # Rename x-axis labels
-    geom_point(data = mc_weight_channel_summary, # Graph points for mean weight
-             aes(x = channeltype, y = mean_weight),
-             color = "red", # Color mean point red
-             size = 1.5) + # Change size to 1.5
-  geom_errorbar(data = mc_weight_channel_summary, # Graph error bar for mean weight
-                aes(x = channeltype,
                     ymin = mean_weight - sd_weight,
                     ymax = mean_weight + sd_weight),
-                width = 0.1,
-                color = "red") +
+                color = "red",
+                width = 0.1) + # Draw error bars
+  scale_x_discrete(labels = channel_name) + # Rename x-axis labels
   theme_minimal()
 ```
-***Figure 8.*** *Distribution of salamader weights in cascades, pools, and side channels. The red dot and lines represent the mean weight and error bar. Visually, the variance of salamanders weights *
+***Figure 8.*** *Distribution of salamader weights in cascades, pools, and side channels. The red dots and lines represent the mean weight and the error bars. Visually, the variance of salamanders weights *
 
-After doing our exploratory analysis, we decide to do an **one-way ANOVA ** test to explore salamander weights between the three channel classifications. There are three samples to test, so we need to use ANOVA. 
+After doing our exploratory data analysis, we decide to do an **one-way ANOVA ** test to explore salamander weights between the three channel classifications. There are three samples to test, so we need to use ANOVA. 
 
 #### One-way ANOVA test
 
@@ -356,12 +346,39 @@ Our random variable is the salamander weight (in grams), and our levels are the 
 ```{r}
 weight_channel_anova <- aov(weight ~ channeltype, data = mack_creek_weight_channel)
 
-summary(weight_channel_anova)
+# Outcomes of ANOVA summary are stored in a list. Save the unlisted version: 
+aov_outputs <- unlist(summary(weight_channel_anova))
+
+# Look at aov_outputs:
+aov_outputs
+
+# Run post-hoc Tukey's
+weight_post_hoc <- TukeyHSD(weight_channel_anova)
+weight_post_hoc
+# Two pairings have differed significantly, but the cascade-side channel pairing is NOT significantly different
+
+# Calculate means difference between the three channel types
+
+# Difference between cascade and pool 
+weight_meand_cp <- abs(mc_weight_channel_summary$mean_weight[1] - mc_weight_channel_summary$mean_weight[2]) 
+# Difference between pool and side channel
+weight_meand_psc <- abs(mc_weight_channel_summary$mean_weight[2] - mc_weight_channel_summary$mean_weight[3]) 
+# Difference between side channel and pool
+weight_meand_scp <- abs(mc_weight_channel_summary$mean_weight[1] - mc_weight_channel_summary$mean_weight[3])
+
 ```
 
-The F-statistic is `r weight_channel_anova$statistic` and the p-value is `r weight_channel_anova$p.value`. We have sufficient evidence to reject the null hypothesis that the mean weights in all three channel types are the same.
+Mean salamander weight ($\bar{x}_{C}$ = `r round(mc_weight_channel_summary$mean_weight[1])` $\pm$ `r round(mc_weight_channel_summary$sd_weight[1], 2)` g, $\bar{x}_{P}$ = `r round(mc_weight_channel_summary$mean_weight[2])` $\pm$ `r round(mc_weight_channel_summary$sd_weight[2], 2)` g, and $\bar{x}_{SC}$ = `r round(mc_weight_channel_summary$mean_weight[3])` $\pm$ `r round(mc_weight_channel_summary$sd_weight[3], 2)` g) differed signficantly across all three channel classifications in 2017 (one-way ANOVA with post-hoc Tukey's HSD, F(`r aov_outputs[1]`, `r aov_outputs[2]`) = `r round(aov_outputs[7],2)`, *p* = `r ifelse(round(aov_outputs[9], 3) == 0, "<.001", round(aov_outputs[9], 3))`). 
 
-Because the data distribution for average salamander weights is positively skewed for both variables (section and channel type), comparing means may not be the best way to compare the groups. Comparing medians through non-parametric tests like the Kruskal-Wallis test would be more preferable in this case.
+The actual means differences between the three channel classifications are:
+
+- Cascade and Pool: `r round(weight_meand_cp, 2)` g
+- Pool and Side Channel: `r round(weight_meand_psc, 2)` g
+- Cascade and Side Channel: `r round(weight_meand_scp, 2)` g
+
+This reflects the results of the post-hoc Tukey's test, where all pairings except the Cascade and Side Channel pairing are significantly different.
+
+Because the data distribution for average salamander weights is positively skewed channel type, comparing means may not be the best way to compare the groups. Comparing medians through non-parametric tests like the Kruskal-Wallis test would be more preferable in this case.
 
 ## Summary
 
