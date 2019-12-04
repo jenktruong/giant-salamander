@@ -39,6 +39,7 @@ The Pacific giant salamander, *Dicamptodon tenebrosus*, is native to the Pacific
 Populations of Pacific giant salamanders have been monitored since 1987 (Gregory). A group Oregon State researchers stationed at the HJ Andrews Experimental Forest were already researching the West Slope cutthroat trout, *Onchorhyncus clarki clarki*, at Mack Creek when they decided to include the salamanders in their studies. Each specimen was measured and weighed before release. The number and weight of salamanders were compared between the different areas where they were found, the forest sections (clear cut(CC) and old growth(OG)) and the channel types (cascade, pool, and side channel). 
 
 ![](Giant salamander.jpg)
+
 ***Figure 1.*** *Pacific giant salamander. Credit: [Jeffrey Marsten](https://en.wikipedia.org/wiki/Pacific_giant_salamander#/media/File:Dicamptodon_tenebrosus_2.JPG)*
 
 ## Data and Methods
@@ -46,6 +47,7 @@ Populations of Pacific giant salamanders have been monitored since 1987 (Gregory
 The data for Pacific giant salamander abundance and weights was collected from 1987-2017 in two standard reaches of Mack Creek in the HJ Andrews Experimental Forest, OR. The specimens in sub-reaches were collected via 2-pass electrofishing before being measured, weighed, and released. The two reaches were characterized by different forest sections: old growth (OG) and new growth (CC). OG refers to the 500 year old coniferous forest upstream and CC refers to the clear-cut section of the forest. The locations where the salamanders were found were further divided into the different channel types: cascade, pool, and side channel. 
 
 ![](Mack creek.png)
+
 ***Figure 2.*** *Map of Mack Creek within the HJ Andrews Experimental Forest. Identified with a red star. Credit: [Dana Warren-Oregon State](https://www.researchgate.net/figure/Map-of-study-sites-and-the-HJ-Andrews-Experimental-forest-HJA-Each-dot-represents-a_fig1_314206020)*
 
 ## Results
@@ -94,6 +96,7 @@ ggplot(data = mack_creek_cc_og, aes(x = year, y = counts)) +
 ggsave(here::here("figures", "Yearly Salamander Population.png"))
 
 ```
+
 ***Figure 3.*** *Change in yearly giant salamander abundance between different forest sections(light green: clear cut, dark green: old growth). Both counts increased through the years without much visual difference.*
 
 ### B. Salamander Counts by Channel Classification
@@ -126,8 +129,7 @@ mack_creek_class_table <- mack_creek_class_count %>%
 
 ```
 
-Just looking populations in the final data collection year, 2017, the proportions of giant salamanders were almost 50% when comparing salamander counts for all channel types across clearcut and original growth sections. This suggests salamanders had almost no preferences between the forest sections, which mirrors the visual results found in Results A. However, there is a large difference in salamander counts between the different channel types. There were more giant salamanders in cascades (CC = `r mack_creek_class_count$n[1]`, OG = `r mack_creek_class_count$n[2]`) than from the numbers in pools (CC = `r mack_creek_class_count$n[3]`, OG = `r mack_creek_class_count$n[4]`) and side channels (CC = `r mack_creek_class_count$n[5]`, OG = `r mack_creek_class_count$n[6]`) combined. 
-
+Just looking populations in the final data collection year, 2017, the proportions of giant salamanders were almost 50% when comparing salamander counts for all channel types across clearcut and original growth sections. 
 
 ***Table 1.*** *The number of giant salamanders found across different parts of the forest. The proportions were calculated and found at almost 50% between CC and OG sections. However, numbers found in cascades greatly exceeded those found in pools or side channels.* 
 ```{r}
@@ -157,6 +159,8 @@ mc_table
 
 ```
 `r mc_table`
+
+This suggests salamanders had almost no preferences between the forest sections, which mirrors the visual results found in Results A. However, there is a large difference in salamander counts between the different channel types. There were more giant salamanders in cascades (CC = `r mack_creek_class_count$n[1]`, OG = `r mack_creek_class_count$n[2]`) than from the numbers in pools (CC = `r mack_creek_class_count$n[3]`, OG = `r mack_creek_class_count$n[4]`) and side channels (CC = `r mack_creek_class_count$n[5]`, OG = `r mack_creek_class_count$n[6]`) combined. 
 
 
 ### C. Hypothesis Testing: Significant Difference in Location?
@@ -246,9 +250,10 @@ ggplot(data = mack_creek_weight_section,
 ggsave(here("figures", "Average Salamander Weight by Section.png"))
 
 ```
-***Figure 6.*** *Distribution of salamader weights in clear cut and old growth forest sections. The red dots represent the mean weight. Visually, the variance of salamanders weights *
 
-After doing our exploratory analysis, we decide to do a **unpaired, 2 sample two-sided T-test** to explore mean salamander weights between the two sections. We assume that the data is unpaired because the two sections are directly connected to each other. 
+***Figure 4.*** *Distribution of salamander weights in clear cut and old growth forest sections. The red dots represent the mean weight, which was found below. Visually, neither histogram is normally distributed, and both look similar despite unequal data spread.*
+
+After doing our exploratory analysis, we decide to do an **unpaired, 2 sample two-sided T-test** to explore mean salamander weights between the two sections. We assume that the data is unpaired because the two sections are directly connected to each other. 
 
 #### Unpaired T-test
 
@@ -331,13 +336,14 @@ ggplot() + # Leave ggplot blank to graph from multiple data frames
   scale_x_discrete(labels = channel_name) + # Rename x-axis labels
   theme_minimal()
 ```
-***Figure 8.*** *Distribution of salamader weights in cascades, pools, and side channels. The red dots and lines represent the mean weight and the error bars. Visually, the variance of salamanders weights *
 
-After doing our exploratory data analysis, we decide to do an **one-way ANOVA ** test to explore salamander weights between the three channel classifications. There are three samples to test, so we need to use ANOVA. 
+***Figure 5.*** *Distribution of salamander weights in cascades, pools, and side channels. The red dots and lines represent the mean weight and error bars. Visually, the data distribution and variability is different for each violin plot.*
+
+After doing our exploratory data analysis, we decide to do a **one-way ANOVA ** test to explore salamander weights between the three channel classifications. There are three samples to test, so we need to use ANOVA. 
 
 #### One-way ANOVA test
 
-Our random variable is the salamander weight (in grams), and our levels are the three channel classificataions: pools, cascades, and side channels.
+Our random variable is the salamander weight (in grams), and our levels are the three channel classifications: pools, cascades, and side channels.
 
 **Null Hypothesis:** The mean salamander weights in the three channel types are the same.
 
