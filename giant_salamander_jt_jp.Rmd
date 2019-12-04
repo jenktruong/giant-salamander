@@ -229,8 +229,6 @@ leveneTest(weight ~ section, data = mack_creek_weight_section)
 
 Conclusion: Reject the null hypothesis that variances are equal.
 
-After doing our exploratory analysis, we decide to do an **unpaired, 2 sample two-sided T-test** and a **Mann-Whitney U** to explore salamander weights between the two sections. We assume that the data is unpaired because the two sections are directly connected to each other.
-
 ```{r}
 # Create beeswarm plots to show distribution
 
@@ -261,7 +259,9 @@ ggsave(here("figures", "Average Salamander Weight by Section.png"))
 ```
 ***Figure 6.*** *Distribution of salamader weights in clear cut and old growth forest sections. The red dot and lines represent the mean weight and error bar. Visually, the variance of salamanders weights *
 
-#### Unpaired T-test:
+After doing our exploratory analysis, we decide to do a **unpaired, 2 sample two-sided T-test** to explore mean salamander weights between the two sections. We assume that the data is unpaired because the two sections are directly connected to each other. 
+
+#### Unpaired T-test
 
 **Null Hypothesis:** The mean salamander weights in both sections are the same.
 
@@ -279,25 +279,13 @@ mean_weight_og <- mack_creek_weight_section %>%
   pull(weight) # Pull weight column as vector
 
 # Perform unpaired, 2-sample T-test
-
 weight_section_ttest <- t.test(mean_weight_cc, mean_weight_og, paired = FALSE)
 ```
 
 The t-statistic is `r weight_section_ttest$statistic` and the p-value is `r weight_section_ttest$p.value`. We have sufficient evidence to reject the null hypothesis that the mean weights in both sections are the same.
+Therefore, the mean salamander weights in both sections are significantly different. 
 
-However, because we previously showed that the variances between the two are not the same, we will use the non-parametric test, the Mann-Whitney U, instead. This test compares medians instead of means.
-
-#### Mann-Whitney U
-
-**Null Hypothesis:** The ranks of the salamander weights are the same between the two sections.
-
-**Alternative Hypothesis:** The ranks of the salamander weights are NOT the same between the two sections.
-
-```{r}
-weight_section_wilcox <- wilcox.test(mean_weight_cc, mean_weight_og)
-```
-
-The U statistic is `r weight_section_wilcox$statistic` and the p-value is `r weight_section_wilcox$p.value`. We have sufficient evidence to reject the null hypothesis that the ranks between the two sections are the same.
+However, because we previously assumed that the variances for the two groups are not equal, the assumption of normality is invalid. A non-parametric test would be more appropriate to analyze the salamander weights from the two sections.
 
 ### E. Comparison of Salamander Weights in Pools, Cascades, and Side Channels
 
@@ -374,7 +362,7 @@ ggplot() + # Leave ggplot blank to graph from multiple data frames
 ```
 
 
-After doing our exploratory analysis, we decide to do an **one-way ANOVA ** test and a **Kruskal-wallis** test to explore salamander weights between the three channel classifications. There are three samples to test, so we need to use ANOVA. 
+After doing our exploratory analysis, we decide to do an **one-way ANOVA ** test to explore salamander weights between the three channel classifications. There are three samples to test, so we need to use ANOVA. 
 
 #### One-way ANOVA test
 
