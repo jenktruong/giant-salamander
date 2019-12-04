@@ -43,7 +43,7 @@ Populations of Pacific giant salamanders have been monitored since 1987 (Gregory
 
 ## Data and Methods
 
-"Old Growth" refers to the 500 year old coniferous forest upstream, while "Clear Cut" refers to the clear-cut section of the forest.
+The data for Pacific giant salamander abundance and weights was collected from 1987-2017 in two standard reaches of Mack Creek in the HJ Andrews Experimental Forest, OR. The specimens in sub-reaches were collected via 2-pass electrofishing before being measured, weighed, and released. The two reaches were characterized by different forest sections: old growth (OG) and new growth (CC). OG refers to the 500 year old coniferous forest upstream and CC refers to the clear-cut section of the forest. The locations where the salamanders were found were further divided into the different channel types: cascade, pool, and side channel. 
 
 ![](Mack creek.png)
 ***Figure 2.*** *Map of Mack Creek within the HJ Andrews Experimental Forest. Identified with a red star. Credit: [Dana Warren-Oregon State](https://www.researchgate.net/figure/Map-of-study-sites-and-the-HJ-Andrews-Experimental-forest-HJA-Each-dot-represents-a_fig1_314206020)*
