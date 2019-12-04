@@ -181,6 +181,10 @@ Based on the substantial differences in salamander numbers between channel types
 First, we checked the distribution of the salamander weight data. After our analysis, we discovered that the data for both sections are positively skewed. The QQ plots do not show a linear relationship, meaning that the distribution is not normal. 
 
 ```{r}
+# Further filter subset so that it only considers creek section for now
+mack_creek_weight_section <- mack_creek_weight_2017 %>% 
+  select(-channeltype) # Remove channel column
+
 # Find mean weight for the two sections
 mc_weight_section_summary <- mack_creek_weight_section %>% 
   group_by(section) %>%  # Group by section
