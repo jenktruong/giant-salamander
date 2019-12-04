@@ -359,7 +359,7 @@ ggplot() + # Leave ggplot blank to graph from multiple data frames
 ```
 
 
-After doing our exploratory analysis, we decide to do an **one-way ANOVA ** test and a **Kruskal-wallis** test to explore salamander weights between the three channel classifications. There are three samples to test, so we need to use ANOVA. 
+After doing our exploratory analysis, we decide to do an **one-way ANOVA ** test to explore salamander weights between the three channel classifications. There are three samples to test, so we need to use ANOVA. 
 
 #### One-way ANOVA test
 
