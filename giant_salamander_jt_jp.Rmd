@@ -36,7 +36,7 @@ mack_creek_df <- read_csv(here::here("raw data", "mack_creek_vertebrates.csv")) 
 
 The Pacific giant salamander, *Dicamptodon tenebrosus*, is native to the Pacific northwest, and at 13 inches in length, it is one of the largest salamanders in North America (OregonWild). Researchers rely on the salamanders to indicate water quality levels, for these amphibians only live in healthy mountain streams. However, habitat loss through logging and other human activities has raised concerns for the continuation of the species (OregonWild). 
 
-Populations of Pacific giant salmanders have been monitored since 1987 (Gregory). A group Oregon State researchers stationed at the HJ Andrews Experimental Forest were already researching the West Slope cutthroat trout, *Onchorhyncus clarki clarki*, at Mack Creek when they decided to include the salamanders in their studies. Each specimen was measured and weighed before release. The number and weight of salamanders were compared between the different areas where they were found, the forest sections (clearcut(CC) and old growth(OG)) and the channel types (channel, pool, and side channel). 
+Populations of Pacific giant salmanders have been monitored since 1987 (Gregory). A group Oregon State researchers stationed at the HJ Andrews Experimental Forest were already researching the West Slope cutthroat trout, *Onchorhyncus clarki clarki*, at Mack Creek when they decided to include the salamanders in their studies. Each specimen was measured and weighed before release. The number and weight of salamanders were compared between the different areas where they were found, the forest sections (clearcut(CC) and old growth(OG)) and the channel types (cascade, pool, and side channel). 
 
 ![](Giant salamander.jpg)
 ***Figure 1.*** *Pacific giant salamander. Credit: [Jeffrey Marsten](https://en.wikipedia.org/wiki/Pacific_giant_salamander#/media/File:Dicamptodon_tenebrosus_2.JPG)*
@@ -113,7 +113,7 @@ mack_creek_class_count <- mack_creek_weight_2017 %>%
 
 # Changing the labels for the channel types. Can't seem to change the row names in the actual table below and can't use pipe operator to combine these steps. 
 
-mack_creek_class_count$channeltype <- gsub("C", "Channel", mack_creek_class_count$channeltype) 
+mack_creek_class_count$channeltype <- gsub("C", "Cascade", mack_creek_class_count$channeltype) 
 
 mack_creek_class_count$channeltype <- gsub("P", "Pool", mack_creek_class_count$channeltype)
 
@@ -126,10 +126,10 @@ mack_creek_class_table <- mack_creek_class_count %>%
 
 ```
 
-Just looking populations in the final data collection year, 2017, the proportions of giant salamanders were almost 50% when comparing salamander counts for all channel types across clearcut and original growth sections. This suggests salamanders had almost no preferences between the forest sections, which mirrors the visual results found in Results A. However, there is a large different in salamander counts between the different channel types. There were more giant salamanders in channels (CC = `r mack_creek_class_count$n[1]`, OG = `r mack_creek_class_count$n[2]`) than from the numbers in pools (CC = `r mack_creek_class_count$n[3]`, OG = `r mack_creek_class_count$n[4]`) and side channels (CC = `r mack_creek_class_count$n[5]`, OG = `r mack_creek_class_count$n[6]`) combined. 
+Just looking populations in the final data collection year, 2017, the proportions of giant salamanders were almost 50% when comparing salamander counts for all channel types across clearcut and original growth sections. This suggests salamanders had almost no preferences between the forest sections, which mirrors the visual results found in Results A. However, there is a large different in salamander counts between the different channel types. There were more giant salamanders in cascades (CC = `r mack_creek_class_count$n[1]`, OG = `r mack_creek_class_count$n[2]`) than from the numbers in pools (CC = `r mack_creek_class_count$n[3]`, OG = `r mack_creek_class_count$n[4]`) and side channels (CC = `r mack_creek_class_count$n[5]`, OG = `r mack_creek_class_count$n[6]`) combined. 
 
 
-***Table 1.*** *The number of giant salamanders found across different parts of the forest. The proportions were calculated and found at almost 50% between CC and OG sections. However, numbers found in channels greatly exceeded those found in pools or side channels.* 
+***Table 1.*** *The number of giant salamanders found across different parts of the forest. The proportions were calculated and found at almost 50% between CC and OG sections. However, numbers found in cascades greatly exceeded those found in pools or side channels.* 
 ```{r}
 # Now finding the proportions
 
@@ -174,7 +174,7 @@ mack_creek_chi <- chisq.test(chi_counts)
 mack_creek_chi
 ```
 
-Based on the substantial differences in salamander numbers between channel types in clear cut and original growth forest sections, the relationship between them was tested to determine association. There is a significant effect of forest condition (CC/OG) on where in the channel salamanders are found (channel/pool/side-channel) ($\chi$^2^(`r mack_creek_chi$parameter`) = `r round(mack_creek_chi$statistic,2)`, *p* = `r round(mack_creek_chi$p.value, 2)`). The proportions in Table 1 suggest that channel type has stronger effects on salamander locations in forest sections than the other way around. 
+Based on the substantial differences in salamander numbers between channel types in clear cut and original growth forest sections, the relationship between them was tested to determine association. There is a significant effect of forest condition (CC/OG) on where in the channel salamanders are found (cascade/pool/side-channel) ($\chi$^2^(`r mack_creek_chi$parameter`) = `r round(mack_creek_chi$statistic,2)`, *p* = `r round(mack_creek_chi$p.value, 2)`). The proportions in Table 1 suggest that channel type has stronger effects on salamander locations in forest sections than the other way around. 
 
 ### D. Comparison of Salamander Weights in OG and CC Sections
 
@@ -201,7 +201,7 @@ ggplot(data = mack_creek_weight_section,
   geom_qq() +
   facet_wrap(~section) # Facet by section
 ```
-***Figures 4 and 5.*** *Histogram and QQ plot of salamanders weights in different forest sections (CC/OG). Visually, neither histogram shows normal distributions of data and the non-linear QQ plots support that analysis.*
+***Figures 4 and 5.*** *Exploring distributions of salamanders weights in different forest sections (CC/OG). Visually, neither the histogram (above) shows normal distributions of data and the non-linear QQ plots (below) support that analysis.*
 
 The histograms show that the data of salamander weights for both sections are positively skewed, and the qq plots are exponentially rising. 
 
@@ -360,7 +360,7 @@ ggplot() + # Leave ggplot blank to graph from multiple data frames
                 color = "red") +
   theme_minimal()
 ```
-
+***Figure 8.*** *Distribution of salamader weights in cascades, pools, and side channels. The red dot and lines represent the mean weight and error bar. Visually, the variance of salamanders weights *
 
 After doing our exploratory analysis, we decide to do an **one-way ANOVA ** test to explore salamander weights between the three channel classifications. There are three samples to test, so we need to use ANOVA. 
 
